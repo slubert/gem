@@ -1,6 +1,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
+
 //parameters
 const player = {
     x: 300,
@@ -121,12 +122,18 @@ function gameOver(){
         enemy2.xd = 0
         enemy2.yd = 0
 
-        ctx.globalAlpha = 0.2;
+        ctx.globalAlpha = 1;
         ctx.fillStyle = "black"
 
         ctx.font = "80px Arial"
         ctx.fillStyle = "black"
         ctx.fillText('game over', 120, 300);
+
+        ctx.font = "20px Arial"
+        ctx.fillStyle = "black"
+        ctx.fillText('press esc to retry', 220, 350)
+
+        ctx.globalAlpha = 0.2
     }
 }
 
@@ -174,6 +181,30 @@ function keyDown(e){
     if (e.key === 'ArrowDown' || e.key === 'Down' || e.key === 's'){
         moveDown();
     }
+
+    //reset
+    if (e.key === 'Escape'){
+        gameOverStatus = false;
+        score = 0
+
+        player.x = 300;
+        player.y = 300;
+
+        enemy1.x = 100;
+        enemy1.y = 300;
+        enemy1.xd = -2;
+        enemy1.yd = -3;
+
+        enemy2.x = 500;
+        enemy2.y = 300;
+        enemy2.xd = 2;
+        enemy2.yd = 3;
+
+        coin.x = getRandomNumber(0, 600);
+        coin.y = getRandomNumber(0, 600);
+
+        ctx.globalAlpha = 1;
+    }
 }
 
 //movment and colision calculation
@@ -197,6 +228,8 @@ function newPos(){
         coin.y = getRandomNumber(0, 600) 
         coin.x = getRandomNumber(0, 600) 
         score ++
+        enemy1.speed += 0.1
+        enemy2.speed += 0.1
     }
 
     if(detectPlayerEnemyColision(enemy1.x, enemy1.y, enemy1.size, enemy2.x, enemy2.y, enemy2.size, player.x, player.y, player.size)){

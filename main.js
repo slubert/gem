@@ -16,8 +16,8 @@ const enemy1 = {
     x: 100,
     y: 300,
     size: 30,
-    xd: -2,
-    yd: -3, 
+    xd: 0,
+    yd: 0, 
     speed: 3,
 }
 
@@ -54,13 +54,9 @@ function update(){
     gameOver();
 
     drawCoin();
-
     drawPlayer();
-
     drawEnemy1();
-
     drawEnemy2();
-    
     drawScore();
 
     newPos();
@@ -72,7 +68,7 @@ function clear(){
     ctx.clearRect(0,0, canvas.width, canvas.height);
 }
 
-//draw
+//draw//
 
 //drawplayer
 function drawPlayer(){
@@ -111,6 +107,7 @@ function drawScore(){
     ctx.fillText(score, 20, 40);
 }
 
+//game over
 function gameOver(){
     if(gameOverStatus){
         player.xd = 0
@@ -118,6 +115,7 @@ function gameOver(){
     
         enemy1.xd = 0
         enemy1.yd = 0
+        enemy1.speed = 0
     
         enemy2.xd = 0
         enemy2.yd = 0
@@ -192,13 +190,13 @@ function keyDown(e){
 
         enemy1.x = 100;
         enemy1.y = 300;
-        enemy1.xd = -2;
-        enemy1.yd = -3;
+        enemy1.speed = 3
 
         enemy2.x = 500;
         enemy2.y = 300;
         enemy2.xd = 2;
         enemy2.yd = 3;
+        enemy2.speed = 3
 
         coin.x = getRandomNumber(0, 600);
         coin.y = getRandomNumber(0, 600);
@@ -212,11 +210,10 @@ function newPos(){
     player.x += player.xd;
     player.y += player.yd;
 
-    enemy1.x += enemy1.xd;
-    enemy1.y += enemy1.yd;
-
     enemy2.x += enemy2.xd;
     enemy2.y += enemy2.yd;
+
+    enemyFollow();
 
     playerDetectWall();
 
@@ -238,6 +235,7 @@ function newPos(){
 }
 
 
+//player movement 
 function moveUp(){
     player.yd = -player.speed
 }
@@ -254,7 +252,23 @@ function moveRight(){
     player.xd = player.speed
 }
 
-//colider detection 
+
+//enemy movment
+function enemyFollow(){
+    let dx = player.x - enemy1.x;
+    let dy = player.y - enemy1.y;
+
+    let mag = Math.sqrt((dx * dx) + (dy * dy))
+
+    dx /= mag;
+    dy /= mag;
+    
+    enemy1.x += dx * enemy1.speed;
+    enemy1.y += dy * enemy1.speed;
+}
+
+
+//colider detection//
 
 //detect wall
 function playerDetectWall(){
